@@ -10,24 +10,66 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/* Class that handles textfiles, files that can be read and written
+/**
+ * Class that handles textfiles, files that can be read and written
  * with Strings */
 public class TextFile extends File {
 
-  /* Constructor using path as a String */
+  /**
+   * Creates a new TextFile instance using the file
+   * specified by the given path.
+   *
+   * @throws NullPointerException if the given path is null
+   */
   public TextFile(String path) {
       super(path);
   }
 
-  /* Returns whether this file exists as a file and can be read */
-  public boolean isValid() {
-    return isFile() && canRead();
+  /**
+   * Reads the file and returns its contents as a String.
+   *
+   *@return text contained in the file as a single- or multi-
+   * line String, or null if the file cannot be read.
+   */
+  public String readFile() {
+    /* Try creating a BufferedReader using the file's path */
+    try (BufferedReader reader = Files.newBufferedReader(Paths.get(getPath()))) {
+        String line, text = "";
+        int line_counter = 0;
+        while ((line = reader.readLine()) != null) {
+            if(line_counter == 0)
+                text = line;
+            else
+                text += "\n" + line;
+            line_counter++;
+        }
+        return text;
+    } catch (IOException e) {
+        return null;
+    }
   }
 
+  /**
+   * Writes the given String to the file.
+   *
+   * @param newText String to write to the file
+   */
+  public boolean writeFile(String newText) {
+    /* Try creating a BufferedWriter using the file's path */
+    try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(getPath()))) {
+        writer.write(newText, 0, newText.length());
+        return true;
+    } catch (IOException e) {
+        return false;
+    }
+  }
 
-  /* Writes file by "expanding" the array into a single String
-   * and writing that String
-   * @param text String array to write to file */
+  /* Writes the given String array to the file by
+   * concatenating the array's elements into a single String
+   * and writing it to the file.
+   *
+   * @param text String array to expand and write to file
+   */
   public void writeFile(String[] text) {
     String file_text = "";
     for(int i = 0; i < text.length; i++)
@@ -35,8 +77,13 @@ public class TextFile extends File {
     writeFile(file_text);
   }
 
-  /* Appends String to file
-   * @param append String to add to the  end of the file */
+  /**
+   * Appends the given String to the end of the file.
+   * No new line will be created unless specified by
+   * the String.
+   *
+   * @param append String to add to the  end of the file
+   */
   public void appendText(String append) {
     writeFile(readFile() + append);
   }
@@ -44,38 +91,6 @@ public class TextFile extends File {
   /* Removes all text from the file */
   public void clear() {
     writeFile("");
-  }
-
-  /* Reads file and returns file contents as String
-   * @return file contents, null if file could not be read */
-  public String readFile() {
-    /* Try creating a BufferedReader using the file's path */
-    try (BufferedReader reader = Files.newBufferedReader(Paths.get(getPath()))) {
-      String line;
-      String text = "";
-      int line_counter = 0;
-      while ((line = reader.readLine()) != null) {
-        if(line_counter == 0)
-          text = line;
-        else
-          text += "\n" + line;
-        line_counter++;
-      }
-      return text;
-    } catch (IOException e) {
-      return null;
-    }
-  }
-  /* Writes file with String
-   * @param file_text String to write to the file */
-  public boolean writeFile(String file_text) {
-    /* Try creating a BufferedWriter using the file's path */
-    try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(getPath()))) {
-      writer.write(file_text, 0, file_text.length());
-      return true;
-    } catch (IOException e) {
-      return false;
-    }
   }
 
   /* Reads file line by line and returns an arrayList of lines
