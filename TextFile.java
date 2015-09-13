@@ -5,14 +5,19 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  * Class that handles textfiles, files that can be read and written
- * with Strings */
+ * with Strings.
+ *
+ * PlainSimple 2015. See github.com/Plain-Simple/TextFile for more
+ * information.
+ *
+ * @author Stefan Kussmaul
+ */
 public class TextFile extends File {
 
   /**
@@ -28,7 +33,7 @@ public class TextFile extends File {
   /**
    * Reads the file and returns its contents as a String.
    *
-   *@return text contained in the file as a single- or multi-
+   * @return text contained in the file as a single- or multi-
    * line String, or null if the file cannot be read.
    */
   public String readFile() {
@@ -88,14 +93,20 @@ public class TextFile extends File {
     writeFile(readFile() + append);
   }
 
-  /* Removes all text from the file */
+  /**
+   * Clears the file of text.
+   */
   public void clear() {
     writeFile("");
   }
 
-  /* Reads file line by line and returns an arrayList of lines
-   * @return an arrayList containing filetext as lines, or null if file
-    * couldn't be read */
+  /**
+   * Reads the file line by line and returns a String arrayList
+   * where each element is a separate line.
+   *
+   * @return a String arrayList containing individual lines
+   * as elements, or null if file could not be read
+   */
   public ArrayList<String> readLines() {
     ArrayList<String> file_lines = new ArrayList<String> ();
     try {
@@ -110,9 +121,13 @@ public class TextFile extends File {
     }
   }
 
-  /* Pastes clipboard contents into file
-   * @return whether clipboard contents were accessed and written successfully */
-  public boolean pasteIntoFile() { // Todo: fix bug where linebreaks are lost
+  /**
+   * Pastes contents of system clipboard into file.
+   *
+   * @return whether clipboard contents were accessed and
+   * written successfully to file
+   */
+  public boolean pasteInto() { // Todo: fix bug where linebreaks are lost
     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     /* get contents from clipboard (stored in a Transferable, which manages data transfer) */
     Transferable contents = clipboard.getContents(null);
