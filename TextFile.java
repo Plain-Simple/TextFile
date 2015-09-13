@@ -98,6 +98,23 @@ public class TextFile extends File {
   }
 
   /**
+   * Searches the file text for the specified
+   * String and returns whether the String was
+   * found. Will return false if the file cannot
+   * be read.
+   *
+   * @return whether the file contains specified
+   * String, or false if the file cannot be read.
+   */
+   public boolean contains(String toFind) {
+       try {
+           return readFile().contains(toFind);
+       } catch(NullPointerException e) {
+           return false;
+       }
+   }
+
+  /**
    * Reads the file line by line and returns a String arrayList
    * where each element is a separate line.
    *
