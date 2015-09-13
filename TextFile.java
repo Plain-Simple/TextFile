@@ -1,8 +1,5 @@
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.datatransfer.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -133,9 +130,7 @@ public class TextFile extends File {
     Transferable contents = clipboard.getContents(null);
     /* if contents are transferable, the Transferable will not be null and will be the
     correct DataFlavor (String). DataFlavor refers to the type of object something is */
-    boolean hasTransferableText =
-            (contents != null) && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
-    if (hasTransferableText) {
+    if (contents != null && contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {
         try {
             return writeFile((String)contents.getTransferData(DataFlavor.stringFlavor));
         } catch (UnsupportedFlavorException|IOException e) {
@@ -145,4 +140,23 @@ public class TextFile extends File {
         return false;
     }
   }
+
+  /**
+   * Copies contents of file to system clipboard.
+   * If the file cannot be read system clipboard will
+   * not be overwritten.
+   *
+   * @return whether file contents were successfully
+   * copied
+   */
+   public boolean copyFrom() {
+       try {
+           StringSelection selection = new StringSelection(readFile());
+           Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+           clipboard.setContents(selection, selection);
+           return true;
+       } catch(IllegalStateException e) {
+           return false;
+       }
+   }
 }
