@@ -47,8 +47,15 @@ public class TextFile extends File {
         }
         return text;
     } catch (IOException e) {
-        return null;
+        return "";
     }
+  }
+
+  /**
+   * Prints file contents to console using System.print().
+   */
+  public void printFile() {
+      System.out.print(readFile());
   }
 
   /**
@@ -80,9 +87,8 @@ public class TextFile extends File {
   }
 
   /**
-   * Appends the given String to the end of the file.
-   * No new line will be created unless specified by
-   * the String.
+   * Appends the given String directly to the end of the file.
+   * No new line will be created unless specified by the String.
    *
    * @param append String to add to the  end of the file
    */
